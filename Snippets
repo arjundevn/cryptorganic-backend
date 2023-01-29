@@ -1,0 +1,34 @@
+------------------------------------------
+
+run:
+uvicorn mavericks:app --reload
+
+------------------------------------------
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Item(BaseModel):
+    name: str
+    description: str
+    price: float
+    tax: float = None
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return {"item": item.dict()}
+
+You can test the endpoint by sending a POST request with a JSON payload to the /items/ endpoint. For example, using curl:
+
+curl -X POST -H "Content-Type: application/json" -d '{"name":"Foo","description":"A very nice Item","price":50.6}' http://localhost:8000/items/
+
+
+------------------------------------------------------------------------------------------
+
+Build Docker container:
+
+You can build the image using the command docker build -t my-api .
+and run the container using the command docker run -p 8000:8000 my-api
+
+------------------------------------------------------------------------------------------
